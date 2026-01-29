@@ -1,0 +1,87 @@
+CRITÉRIOS DE INSPEÇÃO POR GRUPO DE MATERIAL:
+
+[MECÂNICA]
+- Acoplamentos: Com desenho/projeto associado = Classe 3; Demais = Não Aplicável.
+- Amortecedores: Com desenho/projeto associado = Classe 3; Materiais com Epoxi, Borracha nitrílica, teflon = Classe 3 com certificado; Demais = Não Aplicável.
+- Anéis de vedação: Aplicação em disjuntores da ABB, fornecimento em kit, selos de geometria complexa, marca/modelo especificado ou desenho com tolerâncias = Classe 3. Diâmetro interno < 80mm ou dureza >= 70 Shore A = Classe 3. Característica "sem emenda" = Classe 3. Dureza <= 60 Shore = Não Aplicável.
+- Arames: Arames de solda = Classe 3 com certificado; Demais = Não Aplicável.
+- Barras: Aço inox ou bronze = Classe 3 com certificado; Cobre eletrolítico = Classe 3 com certificado; Barras estatóricas = Classe 2; Demais = Não Aplicável.
+- Bombas: Códigos 108120, 108138, 709135, 709136, 99309 = Classe 2; Demais itens = Classe 3.
+- Buchas: Cobre ou Inox = Classe 3 com certificado; Com desenho técnico, tolerâncias ou forma de embalagem específica = Classe 3; Demais = Não Aplicável.
+- Cabo pára-raio: OPGW = Classe 2; Demais = Classe 3 com certificado.
+- Cintas de Elevação: Todos = Classe 3 com certificado.
+- Componentes estruturais de Torre: Torre completa = Classe 2; Apenas peças/reposição = Classe 3.
+- Compressor: Hermético, ar condicionado, scroll, semi-hermético = Classe 3; Moto-compressor = Classe 2.
+- Correias: Todos = Não Aplicável.
+- Diafragmas: Com desenho no descritivo = Classe 3; Demais = Não Aplicável.
+- Discos de Segurança: Todos = Classe 3.
+- Elementos Filtrantes: Com referência de material e desenho = Classe 3; Apenas marca/modelo ou genérico = Não Aplicável.
+- Eletrodos de Solda: Todos = Classe 3 com certificado.
+- Engates rápidos / Engrenagens: Com referência de material e desenho (SM.DT) = Classe 3; Apenas marca e modelo = Não Aplicável.
+- Esfera de sinalização (alta tensão): Classe 2.
+- Filtros: Sem marca/modelo especificado ou Filtros de fumaça (segurança) = Classe 3; Com marca/modelo = Não Aplicável.
+- Flanges: Todos = Classe 3.
+- Gaxetas: Dureza > 80 Shore A, disjuntores ABB, kits, geometria complexa = Classe 3; Dureza <= 80 Shore A = Não Aplicável.
+- Grampos (Ancoragem, Aterramento, Suspensão): Classe 3.
+- Instrumentos de medição mecânica: Funções específicas (fluxo, nível, pressão) = Classe 3 (exigir certificado de calibração se solicitado); SMIL.DT = Não Aplicável.
+- Juntas de expansão: Membrana, bolsa de expansão, barramento blindado, TC, TP, Trafo = Classe 2; Formato circunferencial sem dureza especificada = Não Aplicável; Demais = Classe 3.
+- Juntas de vedação: Papelão hidráulico = Não Aplicável; Demais = Seguir critérios de Anéis de Vedação.
+- Kits: Com Normas Técnicas, desenho, marca e modelo = Classe 3; Demais = Não Aplicável.
+- Lençol de borracha: Classe 3.
+- Lubrificador: Com marca/modelo = Não Aplicável; Demais = Classe 3.
+- Mancais: Vitais ou sistemas de ventilação (G, E, C, F, K, I) = Classe 3; Demais = Não Aplicável.
+- Mangueiras: Hidráulicas = Classe 3; Demais = Não Aplicável.
+- Manilha: Classe 3 com certificado.
+- Manômetros: Com transmissor de pressão ou contato elétrico = Classe 3 com certificado; Demais = Classe 3.
+- Molas: Com desenho ou arame > 3mm = Classe 3; Códigos 710968, 263710 = Classe 3 com certificado; Demais = Não Aplicável.
+- Olhal: Classe 3.
+- Parafusos / Porcas / Arruelas: Padrão = Não Aplicável; Se usuário pedir inspeção = Classe 3 com certificado.
+- Patim (comporta vertedouro): Classe 3 com certificado.
+- Peças automotivas: Todos = Não Aplicável.
+- Pistões: Com marca/modelo = Classe 3; Demais = Não Aplicável.
+- Polia: Classe 3 com certificado.
+- Retentores: Com marca/modelo = Não Aplicável; Demais = Classe 3.
+- Rolamentos: Vitais (SM.DT) ou Folga C3 = Classe 3; Demais = Não Aplicável.
+- Selos mecânicos: Todos = Classe 3.
+- Termômetros / Termostatos (Mecânicos): Todos = Classe 3.
+- Tintas: Industriais (SMMA.DT ou especificação técnica) = Classe 3 com certificado; Demais = Não Aplicável.
+- Tubos: Metálicos = Classe 3; Outros materiais = Não Aplicável.
+- Válvulas: >= 18 polegadas = Classe 2; Inox > 2 pol, pneumáticas, pressão > 10 bar ou de segurança = Classe 3; Demais = Não Aplicável.
+- Cabo de aço: Descrição completa = Classe 3 com certificado.
+
+[ELÉTRICO]
+- Baterias e pilhas: Serviços auxiliares, alcalina, NiCd, chumbo ácida, com eletrólito = Classe 2; Secas/Descarregadas, Tracionárias, Estacionárias = Classe 3 com certificado; Demais = Classe 3.
+- Blocos de contato / Botões / Bornes: Todos = Classe 3.
+- Buchas e Isoladores: > 45 kV = Classe 2; Demais = Classe 3 com certificado.
+- Cabos de dados (Rede/Fibra): Projetos na usina (Casa de Força, Barragem, SEMD) = Classe 2; Reposição de estoque = Classe 3 com certificado; UTP/FTP genérico = Classe 3.
+- Cabos de controle: Na usina (Casa de Força, Barragem, SEMD) = Classe 3 com certificado; Até 3 condutores simples = Classe 3.
+- Cabos de potência: Tensão >= 15 kV ou Seção >= 150mm² ou Especiais = Classe 2; Seção 25 a 150mm² = Classe 3 com certificado; Demais = Classe 3.
+- Cabos de cobre nu (aterramento): Classe 3 com certificado.
+- Capacitores: Alta/Extra-alta tensão = Classe 2; Partida de motor/CFP = Classe 3; Demais = Não Aplicável.
+- Chaves (Seccionadora, Comutadora): Alta/Extra-alta tensão = Classe 2; Média tensão = Classe 3 com certificado; Demais = Classe 3.
+- Contator / Conversores: Todos = Classe 3.
+- Diodos: > 100 A = Classe 3; Demais = Não Aplicável.
+- Disjuntores: >= 1600 A ou >= 2.5 kV = Classe 2; < 2.5 kV = Classe 3.
+- Eletroduto: Rígido = Classe 3; Corrugado = Não Aplicável.
+- Escovas: Motores = Classe 3 com certificado; Geradores = Classe 2 (verificar).
+- Fios: Todos = Classe 3 com certificado.
+- Fontes de alimentação: Industriais (SM.DT) = Classe 3; Demais = Não Aplicável.
+- Fusíveis: Todos = Classe 3.
+- Instrumentos elétricos: Funções específicas (tensão, corrente, campo) = Classe 3 (exigir certificado se solicitado); Demais = Classe 3.
+- Lâmpadas: LED e Fluorescentes = Classe 3; Incandescentes = Não Aplicável.
+- Módulos eletrônicos: Críticos/Vitais/Segurança = Classe 3; Demais = Não Aplicável.
+- Motores elétricos: >= 132 kW = Classe 2; Entre 1 e 132 kW = Classe 3; Demais = Classe 3.
+- Pára-raios: > 45 kV = Classe 2; Demais = Classe 3.
+- Plug / Tomadas: Industriais = Classe 3; Escritório = Não Aplicável.
+- Quadro de comando: Não Aplicável.
+- Reatores: Iluminação monumental = Classe 3 com certificado; Eletrônicos ou até 2x40W = Não Aplicável.
+- Relés: Proteção IED / Buchholz = Classe 2; Específicos (gás) = Classe 3 com certificado; Demais = Classe 3.
+- Resistores: Aquecimento de painéis = Classe 3; Eletrônicos (código de cor) = Não Aplicável.
+- Sensores / Sinalizadores / Transmissores: Todos = Classe 3.
+- Transformadores: > 66 kV = Classe 1; Distribuição ou >= 13.8 kV ou >= 25 kVA = Classe 2; Demais = Classe 3 com certificado.
+- Válvulas solenóide: Todos = Classe 3.
+
+[GERAL / DIVERSOS]
+- Materiais de escritório / Uso comum: Não Aplicável.
+- Óleo/Graxa: Com marca/modelo = Não Aplicável (salvo se usuário pedir certificado).
+- Thinner / Tintas comuns: Não Aplicável.
