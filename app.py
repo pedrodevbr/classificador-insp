@@ -48,7 +48,7 @@ def main():
                     texto_longo = extracted_text
                     desc_curta = st.text_input("Defina uma Descrição Curta para este item", value=doc_file.name)
 
-        if st.button("Classificar Item", disabled=not (desc_curta and texto_long)):
+        if st.button("Classificar Item", disabled=not (desc_curta and texto_longo)):
             with st.spinner("Consultando IA..."):
                 result = get_llm_classification(client, desc_curta, texto_longo)
                 
