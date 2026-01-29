@@ -1,9 +1,21 @@
 import streamlit as st
 import pandas as pd
-from document_utils import extract_text_from_file
+#from document_utils import generate_markdown_file
 import os
 from classificador import get_openrouter_client, get_llm_classification
+
 st.set_page_config(page_title="Classificador de Materiais", layout="wide")
+
+# --- Funções Utilitárias ---
+def load_criterios():
+    if not os.path.exists("criterios.md"):
+        return "# Critérios de Classificação\nDefina as regras aqui..."
+    with open("criterios.md", "r", encoding="utf-8") as f:
+        return f.read()
+
+def save_criterios(content):
+    with open("criterios.md", "w", encoding="utf-8") as f:
+        f.write(content)
 
 def main():
     st.title("Classificador de Materiais e Equipamentos - Inspeção")
@@ -11,7 +23,8 @@ def main():
 
     # Sidebar para Configurações
     st.sidebar.header("Configurações")
-    api_key = st.sidebar.text_input("OpenRouter API Key", type="password", value=os.getenv("OPENROUTER_API_KEY", ""))
+    #api_key = st.sidebar.text_input("OpenRouter API Key", type="password", value=os.getenv("OPENROUTER_API_KEY", ""))
+    api_key = "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"
     
     if not api_key:
         st.warning("Por favor, insira sua API Key do OpenRouter na barra lateral.")
@@ -20,33 +33,23 @@ def main():
     client = get_openrouter_client(api_key)
 
     # Abas para Modos de Operação
-    tab1, tab2 = st.tabs(["Classificação Individual", "Processamento em Lote (Excel/CSV)"])
+    tab1, tab2, tab3 = st.tabs(["Classificação Individual","Report", "Editar criterios"])
 
     # --- ABA 1: Individual ---
     with tab1:
         st.subheader("Análise Individual")
         
         # Opção de Entrada: Texto ou Arquivo
-        input_method = st.radio("Método de Entrada:", ["Digitar Texto", "Upload de Documento (PDF/Doc)"], horizontal=True)
-        
+        #input_method = st.radio("Método de Entrada:", ["Digitar Texto", "Upload de Documento (PDF/Doc)"], horizontal=True)
+        input_method = st.radio("Método de Entrada:", ["Digitar Texto"], horizontal=True)
+
         desc_curta = ""
         texto_longo = ""
         
         if input_method == "Digitar Texto":
             desc_curta = st.text_input("Descrição Curta", "Rolamento 6205")
             texto_longo = st.text_area("Texto Longo (SAP)", "Rolamento rígido de esferas, folga C3, para motor elétrico.")
-        else:
-            doc_file = st.file_uploader("Carregue o documento técnico (PDF, DOCX, Imagem...)", type=["pdf", "docx", "png", "jpg", "jpeg"])
-            if doc_file:
-                with st.spinner("Extraindo texto do documento com Docling..."):
-                    extracted_text = extract_text_from_file(doc_file)
-                    st.success("Texto extraído!")
-                    with st.expander("Ver texto extraído"):
-                        st.markdown(extracted_text)
-                    
-                    # Usa o texto extraído como Texto Longo
-                    texto_longo = extracted_text
-                    desc_curta = st.text_input("Defina uma Descrição Curta para este item", value=doc_file.name)
+        #else:
 
         if st.button("Classificar Item", disabled=not (desc_curta and texto_longo)):
             with st.spinner("Consultando IA..."):
@@ -112,5 +115,19 @@ def main():
             except Exception as e:
                 st.error(f"Erro ao ler arquivo: {e}")
 
+    # --- EDITAR CRITÉRIOS ---
+    with tab3:
+        st.subheader("Configuração de Regras (criterios.md)")
+        st.info("O conteúdo abaixo é enviado para a IA como guia para a classificação.")
+        
+        criterios_atuais = load_criterios()
+        novo_conteudo = st.text_area("Editor de Markdown", value=criterios_atuais, height=500)
+        
+        if st.button("Salvar Critérios"):
+            save_criterios(novo_conteudo)
+            st.success("Arquivo 'criterios.md' atualizado com sucesso!") 
+
+
 if __name__ == "__main__":
     main()
+
