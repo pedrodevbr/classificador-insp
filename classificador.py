@@ -3,7 +3,7 @@ import json
 from openai import OpenAI
 
 # Configuração Padrão
-MODEL_NAME = os.getenv("LLM_MODEL", "google/gemini-2.0-flash-001")
+MODEL_NAME =  "x-ai/grok-4.1-fast"
 
 def get_openrouter_client(api_key=None):
     """Retorna o cliente OpenAI configurado para OpenRouter."""
