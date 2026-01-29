@@ -8,7 +8,7 @@ MODEL_NAME =  "x-ai/grok-4.1-fast"
 def get_openrouter_client(api_key=None):
     """Retorna o cliente OpenAI configurado para OpenRouter."""
     if not api_key:
-        api_key = "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"
+        api_key = "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"
     
     return OpenAI(
         base_url="https://openrouter.ai/api/v1",
