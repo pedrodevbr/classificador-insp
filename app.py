@@ -24,7 +24,7 @@ def main():
     # Sidebar para Configurações
     st.sidebar.header("Configurações")
     #api_key = st.sidebar.text_input("OpenRouter API Key", type="password", value=os.getenv("OPENROUTER_API_KEY", ""))
-    api_key = "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"
+    api_key = "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"
     
     if not api_key:
         st.warning("Por favor, insira sua API Key do OpenRouter na barra lateral.")
