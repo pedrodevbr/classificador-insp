@@ -1,6 +1,7 @@
 openai
 pandas
 streamlit
-tenacity
 openpyxl
+scikit-learn
 docling
+pytest

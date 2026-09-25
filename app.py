@@ -1,132 +1,94 @@
-import streamlit as st
-import pandas as pd
-#from document_utils import generate_markdown_file
+import io
 import os
-from classificador import get_openrouter_client, get_llm_classification
 
-st.set_page_config(page_title="Classificador de Materiais", layout="wide")
+import pandas as pd
+import streamlit as st
 
-# --- Funções Utilitárias ---
-def load_criterios():
-    if not os.path.exists("criterios.md"):
-        return "# Critérios de Classificação\nDefina as regras aqui..."
-    with open("criterios.md", "r", encoding="utf-8") as f:
-        return f.read()
+from insp import Classificador, Memoria, avaliar, carregar_base, cliente_openrouter, CLASSES
+from insp.classificador import LIMIAR_PADRAO
+from insp.sistema2 import MODELO_PADRAO
 
-def save_criterios(content):
-    with open("criterios.md", "w", encoding="utf-8") as f:
-        f.write(content)
+st.set_page_config(page_title="Classificador de Inspeção", layout="wide")
+
+
+def ler_planilha(arq) -> pd.DataFrame:
+    return pd.read_csv(arq) if arq.name.lower().endswith(".csv") else pd.read_excel(arq)
+
 
 def main():
-    st.title("Classificador de Materiais e Equipamentos - Inspeção")
-    st.markdown("---")
+    st.title("Classificador de Materiais — Classe de Inspeção")
+    st.caption("Sistema 1 (regras rápidas e explicáveis) → Sistema 2 (LLM) quando a confiança é baixa. "
+               "Entrada: Texto_PT.")
 
-    # Sidebar para Configurações
     st.sidebar.header("Configurações")
     api_key = st.sidebar.text_input("OpenRouter API Key", type="password", value=os.getenv("OPENROUTER_API_KEY", ""))
-    
-    if not api_key:
-        st.warning("Por favor, insira sua API Key do OpenRouter na barra lateral.")
-        st.stop()
-        
-    client = get_openrouter_client(api_key)
+    modelo = st.sidebar.text_input("Modelo (Sistema 2)", MODELO_PADRAO)
+    modo = st.sidebar.radio("Modo", ["auto", "s1", "s2"], format_func={
+        "auto": "Auto (S1 → S2 se incerto)", "s1": "Só Sistema 1 (sem LLM)", "s2": "Sempre Sistema 2"}.get)
+    limiar = st.sidebar.slider("Confiança mínima para aceitar o S1", 0.0, 1.0, LIMIAR_PADRAO, 0.05)
+    hist = st.sidebar.file_uploader("Histórico classificado (opcional)", type=["xlsx", "csv"],
+                                    help="Planilha com Texto_PT e Classe_Inspecao_Atual; vira base de precedentes.")
+    if modo != "s1" and not api_key:
+        st.sidebar.warning("Sem API key: itens de baixa confiança ficam marcados para revisão.")
 
-    # Abas para Modos de Operação
-    tab1, tab2, tab3 = st.tabs(["Classificação Individual","Report", "Editar criterios"])
+    memoria = Memoria.de_dataframe(ler_planilha(hist)) if hist else None
+    clf = Classificador(client=cliente_openrouter(api_key) if (api_key and modo != "s1") else None,
+                        modelo=modelo, limiar=limiar, memoria=memoria)
 
-    # --- ABA 1: Individual ---
+    tab1, tab2, tab3 = st.tabs(["Individual", "Lote", "Base de critérios"])
+
     with tab1:
-        st.subheader("Análise Individual")
-        
-        # Opção de Entrada: Texto ou Arquivo
-        #input_method = st.radio("Método de Entrada:", ["Digitar Texto", "Upload de Documento (PDF/Doc)"], horizontal=True)
-        input_method = st.radio("Método de Entrada:", ["Digitar Texto"], horizontal=True)
+        texto = st.text_area("Texto_PT", "VALVULA, ESFERA; ACO INOXIDAVEL AISI 316; DIAMETRO 3 POL; ROSCA NPT", height=160)
+        if st.button("Classificar", disabled=not texto.strip()):
+            with st.spinner("Classificando..."):
+                r = clf.classificar(texto, modo=modo)
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("Classe", r.classe or "—")
+            c2.metric("Regra", r.regra_id or "—")
+            c3.metric("Sistema", r.sistema)
+            c4.metric("Confiança", f"{r.confianca:.2f}")
+            if r.classe:
+                st.info(f"**{r.classe}** — {CLASSES.get(r.classe, '')}\n\n{r.regra_desc or ''}")
+            if r.revisar:
+                st.warning("Recomenda-se revisão humana.")
+            st.write("**Justificativa:**", r.justificativa)
+            with st.expander("Detalhes (S1, S2, atributos)"):
+                st.json(r.as_dict())
 
-        desc_curta = ""
-        texto_longo = ""
-        
-        if input_method == "Digitar Texto":
-            desc_curta = st.text_input("Descrição Curta", "Rolamento 6205")
-            texto_longo = st.text_area("Texto Longo (SAP)", "Rolamento rígido de esferas, folga C3, para motor elétrico.")
-        #else:
-
-        if st.button("Classificar Item", disabled=not (desc_curta and texto_longo)):
-            with st.spinner("Consultando IA..."):
-                result = get_llm_classification(client, desc_curta, texto_longo)
-                
-                st.success("Classificação Concluída!")
-                st.json(result)
-                
-                if result.get("codigo_inspecao"):
-                    st.info(f"**Código Sugerido:** {result['codigo_inspecao']}")
-                if result.get("justificativa"):
-                    st.write(f"**Justificativa:** {result['justificativa']}")
-
-    # --- ABA 2: Lote ---
     with tab2:
-        st.subheader("Upload de Arquivo")
-        uploaded_file = st.file_uploader("Escolha um arquivo Excel ou CSV", type=["xlsx", "xls", "csv"])
-        
-        if uploaded_file:
-            try:
-                if uploaded_file.name.endswith('.csv'):
-                    df = pd.read_csv(uploaded_file)
-                else:
-                    df = pd.read_excel(uploaded_file)
-                
-                st.write("Prévia dos Dados:")
-                st.dataframe(df.head())
-                
-                # Seleção de Colunas
-                cols = df.columns.tolist()
-                col_desc = st.selectbox("Selecione a coluna de Descrição Curta", cols, index=0 if len(cols)>0 else None)
-                col_long = st.selectbox("Selecione a coluna de Texto Longo", cols, index=1 if len(cols)>1 else 0)
-                
-                if st.button("Iniciar Processamento em Lote"):
-                    progress_bar = st.progress(0)
-                    status_text = st.empty()
-                    
-                    def update_progress(current, total):
-                        percent = int((current / total) * 100)
-                        progress_bar.progress(percent)
-                        status_text.text(f"Processando item {current} de {total}...")
-                    
-                    with st.spinner("Processando... Isso pode demorar um pouco."):
-                        df_result = process_dataframe(
-                            df, client, 
-                            col_desc=col_desc, 
-                            col_long=col_long,
-                            progress_callback=update_progress
-                        )
-                    
-                    st.success("Processamento Finalizado!")
-                    st.dataframe(df_result)
-                    
-                    # Botão de Download
-                    csv = df_result.to_csv(index=False).encode('utf-8')
-                    st.download_button(
-                        label="Baixar Resultados (CSV)",
-                        data=csv,
-                        file_name='classificacao_resultado.csv',
-                        mime='text/csv',
-                    )
-                    
-            except Exception as e:
-                st.error(f"Erro ao ler arquivo: {e}")
+        arq = st.file_uploader("Planilha (.xlsx/.csv)", type=["xlsx", "xls", "csv"])
+        if arq:
+            df = ler_planilha(arq)
+            st.dataframe(df.head())
+            cols = df.columns.tolist()
+            col_texto = st.selectbox("Coluna do texto", cols, index=cols.index("Texto_PT") if "Texto_PT" in cols else 0)
+            op_cod = ["(nenhuma)"] + cols
+            col_cod = st.selectbox("Coluna do código do material (opcional)", op_cod,
+                                   index=op_cod.index("Codigo_Material") if "Codigo_Material" in cols else 0)
+            if st.button("Processar lote"):
+                barra = st.progress(0.0)
+                out = clf.classificar_df(df, col_texto, None if col_cod == "(nenhuma)" else col_cod, modo,
+                                         progresso=lambda i, n: barra.progress(i / n, f"{i}/{n}"))
+                st.success("Concluído")
+                st.dataframe(out[[c for c in out.columns if c.startswith("insp_")] +
+                                 ([col_cod] if col_cod in out.columns else [])])
+                if "Classe_Inspecao_Atual" in out.columns:
+                    st.subheader("Comparação com a classe atual")
+                    st.json(avaliar(out))
+                buf = io.BytesIO()
+                out.to_excel(buf, index=False)
+                st.download_button("Baixar resultado (.xlsx)", buf.getvalue(), "classificacao_inspecao.xlsx",
+                                   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-    # --- EDITAR CRITÉRIOS ---
     with tab3:
-        st.subheader("Configuração de Regras (criterios.md)")
-        st.info("O conteúdo abaixo é enviado para a IA como guia para a classificação.")
-        
-        criterios_atuais = load_criterios()
-        novo_conteudo = st.text_area("Editor de Markdown", value=criterios_atuais, height=500)
-        
-        if st.button("Salvar Critérios"):
-            save_criterios(novo_conteudo)
-            st.success("Arquivo 'criterios.md' atualizado com sucesso!") 
+        base = carregar_base()
+        busca = st.text_input("Buscar família")
+        for f in base.familias:
+            if busca and busca.lower() not in f.familia.lower():
+                continue
+            with st.expander(f"{f.id} — {f.familia} ({f.area})"):
+                st.text(base.bloco_familia(f.id))
 
 
 if __name__ == "__main__":
     main()
-
